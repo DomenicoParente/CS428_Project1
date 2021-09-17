@@ -42,18 +42,16 @@ public class WeatherScript2 : MonoBehaviour
                 Debug.Log(":\nReceived: " + webRequest.downloadHandler.text);
 
 
-                // grab the current temperature and simplify it if needed
-                int startTemp = webRequest.downloadHandler.text.IndexOf("temp", 0);
-                int endTemp = webRequest.downloadHandler.text.IndexOf(",", startTemp);
-                double tempF = float.Parse(webRequest.downloadHandler.text.Substring(startTemp + 6, (endTemp - startTemp - 6)));
-                int easyTempF = Mathf.RoundToInt((float)tempF);
-                //Debug.Log ("integer temperature is " + easyTempF.ToString());
+                var stringAPI = webRequest.downloadHandler.text;
+                int first = stringAPI.IndexOf("temp");
+                int second = stringAPI.IndexOf("feels_like");
+                string trimTemp = stringAPI.Substring(first, second - first);
+                string temp = trimTemp.Trim('t', 'e', 'm', 'p', ',', ':', '"', ':', ',');
                 int startConditions = webRequest.downloadHandler.text.IndexOf("main", 0);
                 int endConditions = webRequest.downloadHandler.text.IndexOf(",", startConditions);
                 string conditions = webRequest.downloadHandler.text.Substring(startConditions + 7, (endConditions - startConditions - 8));
-                //Debug.Log(conditions);
 
-                weatherTextObject.GetComponent<TextMeshPro>().text = "" + easyTempF.ToString() + "°F\n" + conditions;
+                weatherTextObject.GetComponent<TextMeshPro>().text = "" + temp.ToString() + "°F\n" + conditions;
             }
         }
     }
